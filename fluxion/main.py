@@ -10,9 +10,9 @@ prefix = "handshake"
 password = "viktorialove"
 
 channel = find_channel_by_bssid(interface, bssid)
-print("=" * 60)
+print()
 print("Starting WPA Handshake Capture")
-print("=" * 60)
+print()
 capture_handshake(interface, bssid, ssid, channel, prefix)
 cap_file = "handshake-01.cap"
 analyze_pcap(cap_file)

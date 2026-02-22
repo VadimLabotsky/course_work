@@ -6,7 +6,7 @@ import csv
 
 
 def _ensure_str(x):
-    """Если пришёл ('wlan0mon',) → вернуть 'wlan0mon'"""
+    
     if isinstance(x, tuple):
         return x[0]
     return x
@@ -69,8 +69,8 @@ def capture_handshake(interface, bssid, ssid, channel, prefix, duration=120):
         interface
     ]
 
-    print(f"[+] Starting capture for {duration} seconds")
-    print(f"[+] Command: {' '.join(cmd)}")
+    print(f"Starting capture for {duration} seconds")
+    print(f"Command: {' '.join(cmd)}")
 
     try:
         proc = subprocess.Popen(
@@ -82,21 +82,21 @@ def capture_handshake(interface, bssid, ssid, channel, prefix, duration=120):
 
         time.sleep(duration)
 
-        print("[+] Time elapsed, stopping capture")
+        print("Time elapsed, stopping capture")
 
         os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
         proc.wait(timeout=5)
 
-        print("[+] Capture stopped cleanly")
-        print(f"[+] Output file: {prefix}-01.cap")
+        print("Capture stopped cleanly")
+        print(f"Output file: {prefix}-01.cap")
 
         return True
 
     except KeyboardInterrupt:
-        print("\n[!] Interrupted by user")
+        print("\nInterrupted by user")
         os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
         return False
 
     except Exception as e:
-        print(f"[-] Error: {e}")
+        print(f"Error: {e}")
         return False
