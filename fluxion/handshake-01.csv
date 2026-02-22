@@ -1,0 +1,7 @@
+
+BSSID, First time seen, Last time seen, channel, Speed, Privacy, Cipher, Authentication, Power, # beacons, # IV, LAN IP, ID-length, ESSID, Key
+AA:8E:63:8C:E6:A8, 2026-02-04 19:29:04, 2026-02-04 19:31:04,  1, 180, WPA2, CCMP, PSK, -44,     1158,     1242,   0.  0.  0.  0,  13, Redmi Note 11, 
+
+Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs
+36:33:50:D4:D6:07, 2026-02-04 19:29:05, 2026-02-04 19:31:04, -25,     2352, AA:8E:63:8C:E6:A8,Redmi Note 11
+

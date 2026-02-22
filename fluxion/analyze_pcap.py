@@ -108,25 +108,3 @@ def check_password_subprocess(pcap_file, bssid_target, password):
             pass
 
 
-def main():
-    pcap_file = "handshake.pcap"
-    
-    networks = analyze_pcap(pcap_file)
-    
-    if not networks:
-        return
-    
-    target_bssid = "0e:32:3a:b3:ff:7b"
-    password = "12356789"
-    
-    print(f"Checking password for network: {target_bssid}\n")
-    print(f"Password: {password}\n")
-    
-    if check_password_subprocess(pcap_file, target_bssid, password):
-        print("SUCCESS! Network access granted!\n")
-    else:
-        print("Failed to gain access\n")
-
-
-if __name__ == "__main__":
-    main()
