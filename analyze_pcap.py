@@ -89,14 +89,14 @@ def check_password_subprocess(pcap_file, bssid_target, password):
             print("Password is correct!")
             return True
         elif "Passphrase not in dictionary" in result.stdout:
-            print("Password is incorrect!")
+            print(f"Password is incorrect!")
             return False
         else:
-            print("Could not determine result")
+            print(f"Could not determine result")
             return False
             
     except subprocess.TimeoutExpired:
-        print("Password check took too long")
+        print(f"Password check took too long")
         return False
     except Exception as e:
         print(f"Error: {e}")

