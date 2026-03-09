@@ -2,10 +2,9 @@ from analyze_pcap import analyze_pcap
 from analyze_pcap import check_password_subprocess
 from capture_traffic import find_channel_by_bssid
 from capture_traffic import capture_handshake
-#54:22:F8:1B:E3:F6 MyWiFi
 interface="wlan0mon",
-bssid = "E2:86:EE:1C:7D:56"
-ssid = "Redmi Note 11"
+bssid = "54:22:F8:1B:E3:F6"
+ssid = "MyWiFi"
 prefix = "handshake"
 password = "12356789"
 
