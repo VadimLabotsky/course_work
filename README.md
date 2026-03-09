@@ -13,14 +13,19 @@
 Перед запуском программы переведите интерфейс wlan0 в режим мониторинга:
 
 ```bash
-sudo airmon-ng check kill```
+sudo airmon-ng check kill
+```
 ```bash
-sudo airmon-ng start wlan0```
+sudo airmon-ng start wlan0
+```
 Проверьте, успешно ли выполнен переход:
 ```bash
-iwconfig```
+iwconfig
+```
 После завершения работы программы восстановите обычный режим работы сети:
 ```bash
-sudo airmon-ng stop wlan0mon```
+sudo airmon-ng stop wlan0mon
+```
 ```bash
-sudo systemctl restart NetworkManager```
+sudo systemctl restart NetworkManager
+```
