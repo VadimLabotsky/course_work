@@ -1,0 +1,7 @@
+
+BSSID, First time seen, Last time seen, channel, Speed, Privacy, Cipher, Authentication, Power, # beacons, # IV, LAN IP, ID-length, ESSID, Key
+54:22:F8:1B:E3:F6, 2026-03-09 22:59:37, 2026-03-09 23:01:36,  1, 130, WPA2, CCMP TKIP, PSK, -28,     1159,      412,   0.  0.  0.  0,   6, MyWiFi, 
+
+Station MAC, First time seen, Last time seen, Power, # packets, BSSID, Probed ESSIDs
+50:DA:D6:C1:07:79, 2026-03-09 22:59:39, 2026-03-09 23:01:35,  -3,      584, 54:22:F8:1B:E3:F6,MyWiFi
+
